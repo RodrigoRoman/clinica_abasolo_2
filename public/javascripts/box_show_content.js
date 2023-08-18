@@ -738,7 +738,7 @@ $(document).ready(function() {
 $('#genPDf').click(generatePDF)
 
 function generatePDF() {
-  fetch('https://clinicasanromanv2-production.up.railway.app/exits/generate-pdf-account', {
+  fetch('https://clinicaabasolo2-production.up.railway.app/exits/generate-pdf-account', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

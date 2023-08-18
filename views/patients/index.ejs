@@ -193,6 +193,8 @@ const monthBefore = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate(
                                 </ul>
                                 <%if(!patient.discharged){%>
                                     <a class="btn btn-primary" href="/patients/<%=patient._id%>">Ver cuenta</a>
+                                    <%}%>
+
                                     <%if(currentUser.role == "directAdmin" || currentUser.role == "dinamicAdmin"){%>
                                         <form class="d-inline" action="/patients/<%=patient._id%>?_method=DELETE" method="POST">
                                             <button type="button" class="float-right btn btn-outline-danger mx-1 my-1 btn-sm" data-toggle="modal" data-target="#a<%=patient._id%>">
@@ -220,7 +222,6 @@ const monthBefore = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate(
                                         </form>
  
                                         <a class="float-right btn btn-outline-secondary mx-1 my-1 btn-sm" href="/patients/<%=patient._id%>/edit"><i class="fas fa-edit"></i></a>
-                                    <%}%>
                                 <%}else{%>
                                     <%
                                     const b = patient.admissionDate.toISOString().substr(0,10);
