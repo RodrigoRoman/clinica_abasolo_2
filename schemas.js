@@ -10,12 +10,7 @@ const extension = (joi) => ({
     rules: {
         escapeHTML: {
             validate(value, helpers) {
-                const clean = sanitizeHtml(value, {
-                    allowedTags: [],
-                    allowedAttributes: {},
-                });
-                if (clean !== value) return helpers.error('string.escapeHTML', { value })
-                return clean;
+                return value;
             }
         }
     }
@@ -59,11 +54,11 @@ module.exports.hospitalSchema = Joi.object({
 
 module.exports.patientSchema = Joi.object({
     patient: Joi.object({
-        name: Joi.string().regex(/^[a-zA-Z0-9.,()-+_%*@\u0300-\u036f/%ñ ]*$/, 'Un caracter ingresado no es valido').required().escapeHTML(),
+        name: Joi.string().required().escapeHTML(),
         phone: Joi.number().allow(''),
         cuarto: Joi.string().required(),
         serviceType: Joi.string().required(),
-        edad: Joi.string().allow('').regex(/^[a-zA-Z0-9.,?()-+_%*@\u0300-\u036f?/%ñ ]*$/, 'Un caracter ingresado no es valido').escapeHTML(),
+        edad: Joi.string().allow('').escapeHTML(),
         admissionDate: Joi.date(),
         email: Joi.string().allow('').regex(/^[a-zA-Z0-9.,?()-+_%*@\u0300-\u036f/%ñ ]*$/, 'Un caracter ingresado no es valido').email({tlds: { allow: false } }).escapeHTML(),
         address: Joi.string().allow('').regex(/^[a-zA-Z0-9.,?()-+_%*@\u0300-\u036f/%ñ ]*$/, 'Un caracter ingresado no es valido').escapeHTML(),
