@@ -886,3 +886,28 @@ a.closeAlert.disabled {
 .btn-toggle.active {
   background-color: #808080;
 }
+
+
+a {
+  color: white;
+  text-decoration: none; /* Remove underline */
+}
+
+/* Style the link on hover */
+a:hover {
+  color: lightblue;/* Replace with your desired hover color value */
+}
+
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+}
+
+.grid-item p {
+  margin-top: 10px;
+}

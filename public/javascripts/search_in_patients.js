@@ -117,13 +117,21 @@ function foundPatients(event) {
                                     <li class="list-group-item">Medico tratante:  `+this.treatingDoctor+`</li>
                                     <li class="list-group-item text-muted">Diagnostico: `+this.diagnosis+`</li>
                                 </ul>`
-                                if(!this.discharged){
-                                    patientsContent+=`<a class="btn btn-primary" href="/patients/`+this._id+`">Ver cuenta</a>
+                                if(!this.discharged || (response.currentUser.role == 'directAdmin')){
+                                    if(!this.discharged ){
+
+                                        patientsContent+=`<a class="btn btn-primary" href="/patients/`+this._id+`">Ver cuenta</a>`
+                                    }
+                                    patientsContent+=`
+                                    
                                     <form class="d-inline" action="/patients/`+this._id+`?_method=DELETE" method="POST">
                                         <button class="float-right btn btn-outline-danger mx-1 my-1 btn-sm"><i class="fas fa-trash"></i></button>
                                     </form>
+                                    <a class="float-right btn btn-outline-info mx-1 my-1 btn-sm" href="/patients/${this._id}/activate">Activar</a>
+
                                     <a class="float-right btn btn-outline-secondary mx-1 my-1 btn-sm" href="/patients/`+this._id+`/edit"><i class="fas fa-edit"></i></a>`
-                                }else{
+                                }
+                                if(this.discharged && (response.currentUser.role == 'directAdmin')){
                                     
                                     const b = new Date(this.admissionDate).toISOString().substring(0,10);
                                     const e = new Date(this.dischargedDate).toISOString().substring(0,10);
@@ -165,7 +173,3 @@ function foundPatients(event) {
                  $("selector").find('option[value="'+response.sorted+'"]').attr('selected','selected')
    });
  };
-
-
-
-  

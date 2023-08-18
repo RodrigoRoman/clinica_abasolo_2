@@ -34,6 +34,9 @@ router.put('/:id/updateAllMoneyBox', patients.editAllMoneyBoxes)
 router.route('/:id/discharge')
     .put(isLoggedIn,isDinamicDirectAdmin, catchAsync(patients.dischargePatient))
 
+router.route('/:id/activate')
+    .get(isLoggedIn,isDinamicDirectAdmin, catchAsync(patients.activatePatient))
+
 
 router.route('/:id')
     .get(isLoggedIn,catchAsync(patients.showPatient))

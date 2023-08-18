@@ -200,6 +200,7 @@ module.exports.updatePatient = async (req, res) => {
 }
 
 
+
 module.exports.updatePayedPatient = async (req, res) => {
   const { id } = req.params;
   const patient = await Patient.findById(id).populate({
@@ -272,6 +273,22 @@ module.exports.dischargePatient = async (req, res) => {
     await patient.save();
     req.flash('success', 'Paciente dado de alta!');
     res.redirect(`/patients`)
+}
+
+
+module.exports.activatePatient = async (req, res) => {
+  const { id } = req.params;
+  const patient = await Patient.findById(id).populate({
+      path: 'servicesCar',
+      populate: {
+        path: 'service',
+      },
+    });
+  //variable for local time 
+  patient.discharged = false
+  await patient.save();
+  req.flash('success', 'Paciente activado!');
+  res.redirect(`/patients`)
 }
 
 module.exports.deletePatient = async (req, res) => {
