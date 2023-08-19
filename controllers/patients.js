@@ -979,60 +979,63 @@ async function removeTransactionFromHierarchy(box, transaction) {
 
 
 module.exports.updateServiceFromAccount = async (req, res) => {
-    let timePoint = await Point.findOne({name:"datePoint"});
-    if(!timePoint.resupplying){
-    try{
-    const service = await Service.findById(req.body.serviceID);
-    const nDate = getMexicoCityTime()
-    const patient = await Patient.findByIdAndUpdate(req.params.id,{$pull:{servicesCar:{_id:req.body.trans_id}}}).populate({
-        path: 'servicesCar',
-        populate: {
-          path: 'service',
-        },
-      });
-    const moneyBox = await MoneyBox.findByIdAndUpdate(req.body.moneyBoxId,{$pull:{transactionsActive:{_id:req.body.trans_id}}})
-    const req_amount = req.body.amount;
-    let transact = await Transaction.findById(req.body.trans_id);
-    let location = transact.location;
-    const difference = transact.amount - req_amount;
-    if(difference<0){
-        if(service.service_type == "supply"){
-            if((service.stock - Math.abs(difference)) < 0 ){
-                return res.send({ msg: "False",serviceName:`${service.name}`});
-            }else{
-                service.stock = service.stock - Math.abs(difference);
-            }
-        }
-    }else{
-        service.stock = service.stock + Math.abs(difference);
-    }
-    const new_trans = new Transaction({patient: patient,service:service,amount:req_amount,location:location,consumtionDate:nDate,addedBy:req.user});
-    if(service.service_type == "supply"){
-        let timePoint = await Point.findOneAndUpdate({name:"datePoint"},{$pull:{servicesCar:{_id:req.body.trans_id}}}).populate({
-            path: 'servicesCar',
-            populate: {
-              path: 'service',
-            },
-          });
-          timePoint.servicesCar.push(new_trans);
-          await timePoint.save();
-    }
-    await Transaction.deleteMany({_id:req.body.trans_id});
-    patient.servicesCar.push(new_trans);
-    moneyBox.transactionsActive.push(new_trans);
-    await new_trans.save();
-    //Remove supply from the inventory
-    await service.save();
-    await patient.save();
-    //update transactions (delete all transactions with that service and create a new one with new amount)
-    return res.send({ msg: "True",serviceName:`${service.name}`,patientName:`${patient.name}`});
-    }catch(e){
-        console.log('error')
-        console.log(e)
-    }}
-    else{
-        return res.send({ msg: "Paused"});
-    }
+  let timePoint = await Point.findOne({name:"datePoint"});
+  console.log('BODY');
+
+  console.log(req.body);
+  if(!timePoint.resupplying){
+  try{
+  const service = await Service.findById(req.body.serviceID);
+  const nDate = getMexicoCityTime()
+  const patient = await Patient.findByIdAndUpdate(req.params.id,{$pull:{servicesCar:{_id:req.body.trans_id}}}).populate({
+      path: 'servicesCar',
+      populate: {
+        path: 'service',
+      },
+    });
+  const moneyBox = await MoneyBox.findByIdAndUpdate(req.body.moneyBoxId,{$pull:{transactionsActive:{_id:req.body.trans_id}}})
+  const req_amount = req.body.amount;
+  let transact = await Transaction.findById(req.body.trans_id);
+  let location = transact.location;
+  const difference = transact.amount - req_amount;
+  if(difference<0){
+      if(service.service_type == "supply"){
+          if((service.stock - Math.abs(difference)) < 0 ){
+              return res.send({ msg: "False",serviceName:`${service.name}`});
+          }else{
+              service.stock = service.stock - Math.abs(difference);
+          }
+      }
+  }else{
+      service.stock = service.stock + Math.abs(difference);
+  }
+  const new_trans = new Transaction({patient: patient,relatedBox:moneyBox,service:service,amount:req_amount,location:location,consumtionDate:nDate,addedBy:req.user});
+  if(service.service_type == "supply"){
+      let timePoint = await Point.findOneAndUpdate({name:"datePoint"},{$pull:{servicesCar:{_id:req.body.trans_id}}}).populate({
+          path: 'servicesCar',
+          populate: {
+            path: 'service',
+          },
+        });
+        timePoint.servicesCar.push(new_trans);
+        await timePoint.save();
+  }
+  await Transaction.deleteMany({_id:req.body.trans_id});
+  patient.servicesCar.push(new_trans);
+  moneyBox.transactionsActive.push(new_trans);
+  await new_trans.save();
+  //Remove supply from the inventory
+  await service.save();
+  await patient.save();
+  //update transactions (delete all transactions with that service and create a new one with new amount)
+  return res.send({ msg: "True",serviceName:`${service.name}`,patientName:`${patient.name}`});
+  }catch(e){
+      console.log('error')
+      console.log(e)
+  }}
+  else{
+      return res.send({ msg: "Paused"});
+  }
 }
 
 

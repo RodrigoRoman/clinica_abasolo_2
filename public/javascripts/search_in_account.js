@@ -763,6 +763,7 @@ function editService(event) {
 
 //submit edit form with new vlaues after clicking accept
 function submitEditService(event) {
+  console.log('Submit edit')
   event.preventDefault();
       // send update request
       $.ajax({
@@ -778,8 +779,11 @@ function submitEditService(event) {
         },
         dataType: 'JSON',
       }).done(function(response){
+        console.log('in response');
+        try{
         const uniqueStr = Math.random().toString(36).substring(7);
         if (response.msg === 'True') {
+          console.log('in true');
           let flashMessage = `<div class="alert alert-success alert-dismissible fade show fixed-top" role="alert">
           ${response.serviceName} editado en cuenta de ${response.patientName}
           <button type="button" id = flashMessage${uniqueStr} class="closeAlert" data-dismiss="alert" aria-label="Close">
@@ -802,8 +806,16 @@ function submitEditService(event) {
           $("#account-table").fadeOut("fast").load(" #account-table > *").fadeIn('slow');
           setInterval(function(){$(`#flashMessage${uniqueStr}`).click()},3000);
       }
+    }catch(e){
+      console.log('ERROR');
+      console.log(e)
+    
+  }
 
-      });
+      }
+    
+      
+      );
 };
 
 
@@ -837,6 +849,7 @@ function submitDiscount(event,data) {
           </button>
           </div> `;
           $("main").prepend(flashMessage);
+          
           $("#account-table").fadeOut("fast").load(" #account-table > *").fadeIn('slow');
           setInterval(function(){$(`#flashMessage${uniqueStr}`).click()},3000);
       }
