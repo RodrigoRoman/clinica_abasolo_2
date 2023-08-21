@@ -458,6 +458,7 @@ module.exports.showDischargedPatient= async (req, res) => {
 module.exports.patientAccount = async (req, res) => {
   console.log('inside patient account')
   let {begin,end} = req.query;
+  try{
   let pat = await Patient.findById(req.params.id);
   //variable for local time 
   const nDate = getMexicoCityTime();
@@ -566,16 +567,17 @@ module.exports.patientAccount = async (req, res) => {
   begin = req.query.begin;
   end = req.query.end;
   console.log('role-----')
-  console.log(req.user.role);
+  console.log(req.query);
   patient.sort((a,b)=>a.class.localeCompare(b.class,"es",{sensitivity:'base'}))
   console.log('el usuario')
-
-  res.render(`patients/showAccount`, { patient,begin,end,'role':req.user.role});
+  res.render(`patients/showAccount`, { patient,begin,end,'role':req.query.role});
+}catch(e){console.log('Errores');
+console.log(e)}
 }
 
 
 module.exports.accountToPDF = async (req,res) =>{ 
-    let {begin,end,name} = req.query;               
+    let {begin,end,name,role} = req.query;               
     // const browser = await puppeteer.launch();       // run browser
     
   const browser = await puppeteer.launch({
@@ -586,7 +588,7 @@ module.exports.accountToPDF = async (req,res) =>{
 
   const page = await browser.newPage();
   await page.goto(
-    `https://clinicaabasolo2-production.up.railway.app/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,
+    `https://clinicaabasolo2-production.up.railway.app/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}&role=${role}`,
     { waitUntil: 'networkidle0' }
     // `http://localhost:3000/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,
     // { waitUntil: 'networkidle0' }
