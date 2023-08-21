@@ -164,14 +164,13 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
                 </span>
               </td>
               <td>
-                <select id=`moneyBox<%=item.trans_id%>` class="btn btn-outline-secondary btn-lg custom-select ml-2" name="moneyBox" style="max-width: 300px">
-                  <% for (let box of boxes) {
-                    %>
-                      <option <%= item.relatedBox._id.equals(box._id) ? 'selected' : '' %>  id="<%= box._id %>" value="<%= box._id %>" data-hierarchy="<%= box.hierarchy %>"><%= box.name %></option>
+                <select id="moneyBox<%=item.trans_id%>" class="btn btn-outline-secondary btn-lg custom-select ml-2" name="moneyBox" style="max-width: 300px">
+                  <% for (let box of boxes) { %>
+                    <option <%= item.relatedBox && item.relatedBox._id && item.relatedBox._id.equals(box._id) ? 'selected' : '' %> id="<%= box._id %>" value="<%= box._id %>" data-hierarchy="<%= box.hierarchy %>"><%= box.name %></option>
                   <% } %>
                 </select>
-                
               </td>
+              
               
             <%}else{%>
             <%if(currentUser.username == (item.author)){%>
@@ -250,14 +249,13 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
               </div>
             </td> 
             <td>
-              <select id=`moneyBox<%=item.trans_id%>` class="btn btn-outline-secondary btn-lg custom-select ml-2" name="moneyBox" style="max-width: 300px">
-                <% for (let box of boxes) {
-                  %>
-                    <option <%= item.relatedBox._id.equals(box._id) ? 'selected' : '' %>  id="<%= box._id %>" value="<%= box._id %>" data-hierarchy="<%= box.hierarchy %>"><%= box.name %></option>
+              <select id="moneyBox<%=item.trans_id%>" class="btn btn-outline-secondary btn-lg custom-select ml-2" name="moneyBox" style="max-width: 300px">
+                <% for (let box of boxes) { %>
+                  <option <%= item.relatedBox && item.relatedBox._id && item.relatedBox._id.equals(box._id) ? 'selected' : '' %> id="<%= box._id %>" value="<%= box._id %>" data-hierarchy="<%= box.hierarchy %>"><%= box.name %></option>
                 <% } %>
               </select>
-              
             </td>
+            
           </tr>
         <%}%>
       </tbody>
