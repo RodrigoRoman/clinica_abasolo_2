@@ -386,7 +386,7 @@ module.exports.showPatient = async (req, res) => {
 
     let redirected = req.query.redirected || false;
 
-    res.render(`patients/show`, { patient, str_id,begin,end,eH,bH,boxes,'flag':redirected,'resupplying':timePoint.resupplying});
+    res.render(`patients/show`, { patient, str_id,begin,end,eH,bH,boxes,'flag':redirected,'resupplying':timePoint.resupplying,'role':req.query.role});
 }
 
 
@@ -456,124 +456,122 @@ module.exports.showDischargedPatient= async (req, res) => {
 
 
 module.exports.patientAccount = async (req, res) => {
-    let {begin,end} = req.query;
-    let pat = await Patient.findById(req.params.id);
-    console.log('show account')
-    console.log(req.params.id)
-    //variable for local time 
-    const nDate = getMexicoCityTime();
-    if(!begin){
-        begin = pat.admissionDate
-    }else{
-        begin = new Date(begin+"T00:00:01.000Z");
-    };
-    if(!end){
-        end= nDate;
-    }else{end = new Date(end+"T23:59:01.000Z")};
-    const patient = await Patient.aggregate([   
-        // put in a single document both transaction and service fields
-        {$match: {_id:  new ObjectId(req.params.id)}},
-        {$group: {
-            _id:"$name",
-            patientName:{$last:"$name"},
-            treatingDoctor:{$last:"$treatingDoctor"},
-            servicesCar:{$last:"$servicesCar"},
-            rfc : {$last:"$rfc"},
-            diagnosis: {$last:"$diagnosis"},
-            admissionDate: { $last:"$admissionDate"}}},
-        {$unwind:"$servicesCar"},
-        {
-            $lookup: {
-               from: "transactions",
-               localField: "servicesCar",    
-               foreignField: "_id",  
-               as: "fromTransaction"
-            }
-         },
-         {
-            $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromTransaction", 0 ] }, "$$ROOT" ] } }
-         },
-         { $project: { fromTransaction: 0, servicesCar:0 } },
-        {$match: {consumtionDate:{$gte:begin,$lte:end}}},
-        {
-            $lookup: {
-               from: "services",
-               localField: "service",
-               foreignField: "_id",
-               as: "fromService"
-            }
-         },
-         {
-            $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromService", 0 ] }, "$$ROOT" ] } }
-         },
-         { $project: { fromService: 0 } },
-         {$group: {
-            _id: {
-              name: "$name",
-              discount: "$discount",
-              price: { $ifNull: ["$price", "$sell_price"] }
-            },
-            patientName:{$last:"$patientName"},
-            class:{$last:"$class"},
-            name: {$last:"$name"},
-            treatingDoctor:{$last:"$treatingDoctor"},
-            service_type : {$last:"$service_type"},
-            rfc : {$last:"$rfc"},
-            diagnosis : {$last:"$diagnosis"},
-            admissionDate : {$last:"$admissionDate"},
-            unit : {$last:"$unit"},
-            price: {$last:"$price"},
-            cost: {$last:0},
-            expiration: { $push:"$expiration"},
-            sell_price: { $last:"$sell_price"},
-            buy_price: { $last: "$buy_price"},
-            discount: { $last: "$discount"}, // Add discount
-            amount: { $sum:"$amount"}}},
-         {
-            $lookup: {
-               from: "services",
-               localField: "service",
-               foreignField: "_id",
-               as: "fromService"
-            }
-         },
-    {
-      $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromService", 0 ] }, "$$ROOT" ] } }
-         },
-         { $project: { fromService: 0 } },
-        {$group: {
-            _id:"$class", // Group by name and discount
-            patientName:{$last:"$patientName"},
-            class:{$last:"$class"},
-            serviceName: {$push:"$name"},
-            treatingDoctor:{$last:"$treatingDoctor"},
-            service_type : {$last:"$service_type"},
-            rfc : {$last:"$rfc"},
-            diagnosis : {$last:"$diagnosis"},
-            admissionDate : {$last:"$admissionDate"},
-            price: {$push:"$price"},
-            cost: {$push:0},
-            discount: { $last: "$discount"}, // Add discount
-            service_unit:{$push:"$unit"},
-            expiration: { $push:"$expiration"},
-            sell_price: { $push:"$sell_price"},
-            buy_price: { $push: "$buy_price"},
-            amount: { $push:"$amount"}}},
-        {$addFields:{totalSell : { $sum: "$sell_price" }}},
-        {$addFields:{totalBuy : { $sum: "$buy_price" }}},
-        {$addFields:{totalPrice : { $sum: "$price" }}},
-        {$addFields:{totalCost : { $sum: "$cost" }}},
-    ]).collation({locale:"en", strength: 1});
-    if (!patient) {
-        req.flash('error', 'No se encontro paciente!');
-        return res.redirect('/patients');
-    }
-    begin = req.query.begin;
-    end = req.query.end;
-    patient.sort((a,b)=>a.class.localeCompare(b.class,"es",{sensitivity:'base'}))
-    res.render(`patients/showAccount`, { patient,begin,end});
+  console.log('inside patient account')
+  let {begin,end} = req.query;
+  let pat = await Patient.findById(req.params.id);
+  //variable for local time 
+  const nDate = getMexicoCityTime();
+  if(!begin){
+      begin = pat.admissionDate
+  }else{
+      begin = new Date(begin+"T00:00:01.000Z");
+  };
+  if(!end){
+      end= nDate;
+  }else{end = new Date(end+"T23:59:01.000Z")};
+  const patient = await Patient.aggregate([   
+      // put in a single document both transaction and service fields
+      {$match: {_id:  new ObjectId(req.params.id)}},
+      {$group: {
+          _id:"$name",
+          patientName:{$last:"$name"},
+          treatingDoctor:{$last:"$treatingDoctor"},
+          servicesCar:{$last:"$servicesCar"},
+          rfc : {$last:"$rfc"},
+          diagnosis: {$last:"$diagnosis"},
+          admissionDate: { $last:"$admissionDate"}}},
+      {$unwind:"$servicesCar"},
+      {
+          $lookup: {
+             from: "transactions",
+             localField: "servicesCar",    
+             foreignField: "_id",  
+             as: "fromTransaction"
+          }
+       },
+       {
+          $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromTransaction", 0 ] }, "$$ROOT" ] } }
+       },
+       { $project: { fromTransaction: 0, servicesCar:0 } },
+      {$match: {consumtionDate:{$gte:begin,$lte:end}}},
+      {
+          $lookup: {
+             from: "services",
+             localField: "service",
+             foreignField: "_id",
+             as: "fromService"
+          }
+       },
+       {
+          $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromService", 0 ] }, "$$ROOT" ] } }
+       },
+       { $project: { fromService: 0 } },
+       {$group: {
+          _id: { name:"$name", discount: "$discount", service_type: "$service_type" }, // Group by name and discount
+          patientName:{$last:"$patientName"},
+          class:{$last:"$class"},
+          name: {$last:"$name"},
+          unit: {$last:"$unit"},
+          treatingDoctor:{$last:"$treatingDoctor"},
+          service_type : {$last:"$service_type"},
+          rfc : {$last:"$rfc"},
+          diagnosis : {$last:"$diagnosis"},
+          admissionDate : {$last:"$admissionDate"},
+          price: {$last:"$price"},
+          cost: {$last:0},
+          expiration: { $push:"$expiration"},
+          sell_price: { $last:"$sell_price"},
+          buy_price: { $last: "$buy_price"},
+          discount: { $last: "$discount"}, // Add discount
+          amount: { $sum:"$amount"}}},
+       {
+          $lookup: {
+             from: "services",
+             localField: "service",
+             foreignField: "_id",
+             as: "fromService"
+          }
+       },
+  {
+    $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromService", 0 ] }, "$$ROOT" ] } }
+       },
+       { $project: { fromService: 0 } },
+      {$group: {
+          _id: { class:"$class", service_type: "$service_type" }, // Group by name and discount
+          patientName:{$last:"$patientName"},
+          class:{$last:"$class"},
+          serviceName: {$push:"$name"},
+          treatingDoctor:{$last:"$treatingDoctor"},
+          service_type : {$last:"$service_type"},
+          rfc : {$last:"$rfc"},
+          diagnosis : {$last:"$diagnosis"},
+          admissionDate : {$last:"$admissionDate"},
+          price: {$push:"$price"},
+          cost: {$push:0},
+          service_unit:{$push:"$unit"},
+          discount: { $last: "$discount"}, // Add discount
+          expiration: { $push:"$expiration"},
+          sell_price: { $push:"$sell_price"},
+          buy_price: { $push: "$buy_price"},
+          amount: { $push:"$amount"}}},
+      {$addFields:{totalSell : { $sum: "$sell_price" }}},
+      {$addFields:{totalBuy : { $sum: "$buy_price" }}},
+      {$addFields:{totalPrice : { $sum: "$price" }}},
+      {$addFields:{totalCost : { $sum: "$cost" }}},
+  ]).collation({locale:"en", strength: 1});
+  if (!patient) {
+      req.flash('error', 'No se encontro paciente!');
+      return res.redirect('/patients');
+  }
+  begin = req.query.begin;
+  end = req.query.end;
+  console.log('role-----')
+  console.log(req.query.role)
+  patient.sort((a,b)=>a.class.localeCompare(b.class,"es",{sensitivity:'base'}))
+  console.log('el usuario')
+  
+  res.render(`patients/showAccount`, { patient,begin,end,'role':req.query.role});
 }
-
 
 
 module.exports.accountToPDF = async (req,res) =>{ 
