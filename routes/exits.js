@@ -45,55 +45,55 @@ router.route('/resetAll')
     .put(exits.resetAllRefill)
 
 router.route('/:id')
-    .delete(isLoggedIn, isLoggedIn, isDinamicDirectAdmin, catchAsync(exits.deleteExit))
+    .delete(isLoggedIn, isLoggedIn, isDirectAdminOrCaja, catchAsync(exits.deleteExit))
 
-router.get('/payments', isLoggedIn,isDinamicDirectAdmin, catchAsync(exits.index_exits))
+router.get('/payments', isLoggedIn,isDirectAdminOrCaja, catchAsync(exits.index_exits))
 
-router.get('/searchAllExits', isLoggedIn,isDinamicDirectAdmin, catchAsync(exits.searchAllExits))
+router.get('/searchAllExits', isLoggedIn,isDirectAdminOrCaja, catchAsync(exits.searchAllExits))
 
 
 router.route('/hospital_account')
-    .get(isLoggedIn,isDinamicDirectAdmin,exits.hospital_account)
-    .post(isLoggedIn,isDinamicDirectAdmin,exits.accountReportPDF)
+    .get(isLoggedIn,isDirectAdminOrCaja,exits.hospital_account)
+    .post(isLoggedIn,isDirectAdminOrCaja,exits.accountReportPDF)
 
 
 
 router.route('/box/:id')
-    .get(isLoggedIn,isDinamicDirectAdmin,catchAsync(exits.showMoneyBox))
+    .get(isLoggedIn,isDirectAdminOrCaja,catchAsync(exits.showMoneyBox))
 
 router.route('/boxShow/:id')
-    .get(isLoggedIn,isDinamicDirectAdmin,catchAsync(exits.boxShowContent))
+    .get(isLoggedIn,isDirectAdminOrCaja,catchAsync(exits.boxShowContent))
 
 router.route('/makeCut/:id')
-    .put(isLoggedIn,isDinamicDirectAdmin,catchAsync(exits.makeCut))
+    .put(isLoggedIn,isDirectAdminOrCaja,catchAsync(exits.makeCut))
     
     
 router.route('/box')
-    .get(isLoggedIn,isDinamicDirectAdmin,catchAsync(exits.indexMoneyBox))
-    .post(isLoggedIn,isDinamicDirectAdmin,catchAsync(exits.createBox))
+    .get(isLoggedIn,isDirectAdminOrCaja,catchAsync(exits.indexMoneyBox))
+    .post(isLoggedIn,isDirectAdminOrCaja,catchAsync(exits.createBox))
 
 router.route('/boxRebuild/:id')
-    .get(isLoggedIn,isDinamicDirectAdmin,catchAsync(exits.boxShowFiltered))
+    .get(isLoggedIn,isDirectAdminOrCaja,catchAsync(exits.boxShowFiltered))
 
 router.route('/newBox')
-    .get(isLoggedIn,isDinamicDirectAdmin,catchAsync(exits.createBoxForm))
+    .get(isLoggedIn,isDirectAdminOrCaja,catchAsync(exits.createBoxForm))
 
-router.get('/searchSP', isLoggedIn, isDinamicDirectAdmin, catchAsync(exits.servicesPayments))
+router.get('/searchSP', isLoggedIn, isDirectAdminOrCaja, catchAsync(exits.servicesPayments))
 
 
 router.route('/moneyBox/:id')
-    .delete( isLoggedIn, isDinamicDirectAdmin, catchAsync(exits.deleteMoneyBox))
+    .delete( isLoggedIn, isDirectAdminOrCaja, catchAsync(exits.deleteMoneyBox))
 
 router.route('/generate-pdf-account')
-    .post(isLoggedIn, isDinamicDirectAdmin,catchAsync(exits.generate_pdf))
+    .post(isLoggedIn, isDirectAdminOrCaja,catchAsync(exits.generate_pdf))
 
 router.route('/generate-pdf-stock')
-    .post(isLoggedIn, isDinamicDirectAdmin,catchAsync(exits.generate_pdf_stock))
+    .post(isLoggedIn, isDirectAdminOrCaja,catchAsync(exits.generate_pdf_stock))
     
 router.route('/removeBoxFrom/:id')
-    .put(isLoggedIn, isDinamicDirectAdmin,catchAsync(exits.removeBoxFrom))
+    .put(isLoggedIn, isDirectAdminOrCaja,catchAsync(exits.removeBoxFrom))
 
 router.route('/addChangeToBox')
-    .put(isLoggedIn, isDinamicDirectAdmin,catchAsync(exits.addChangeToBox))
+    .put(isLoggedIn, isDirectAdminOrCaja,catchAsync(exits.addChangeToBox))
 
 module.exports = router;

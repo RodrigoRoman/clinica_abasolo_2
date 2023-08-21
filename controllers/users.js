@@ -16,13 +16,13 @@ module.exports.register = async (req, res, next) => {
         if(keyword == "administracionClinicaSRMina7"){
             user = new User({ email, username,moneyBox, role:"directAdmin",color:"#4a81e8"});
         }
-        if(keyword == "administracion1" || keyword == "cajaSanRoman"){
+        if(keyword == "administracion1" || keyword == "cajaAbasolo"){
             user = new User({ email, username,moneyBox, role:"caja",color:"#4a81e8"});
         }
-        if(keyword == "enfermeriaSanRoman"){
+        if(keyword == "enfermeriaAbasolo"){
             user = new User({ email, username,moneyBox, role:"nurse",color:"#4a81e8"});
         }
-        if(keyword == "MedicoSanRoman"){
+        if(keyword == "MedicoAbasolo"){
             user = new User({ email, username,moneyBox, role:"medico",color: randomColor({luminosity:'light'})});
         }
         const registeredUser = await User.register(user, password);
