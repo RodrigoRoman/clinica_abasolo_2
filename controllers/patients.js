@@ -566,11 +566,11 @@ module.exports.patientAccount = async (req, res) => {
   begin = req.query.begin;
   end = req.query.end;
   console.log('role-----')
-  console.log(req.query.role)
+  console.log(req.user.role);
   patient.sort((a,b)=>a.class.localeCompare(b.class,"es",{sensitivity:'base'}))
   console.log('el usuario')
-  
-  res.render(`patients/showAccount`, { patient,begin,end,'role':req.query.role});
+
+  res.render(`patients/showAccount`, { patient,begin,end,'role':req.user.role});
 }
 
 
