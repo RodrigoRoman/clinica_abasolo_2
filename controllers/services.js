@@ -316,71 +316,22 @@ module.exports.searchAllSupplies = async (req, res) => {
             { principle: search },
             { doctor: search}
         ]; 
-    if(sorted == "stock"){
-        //Case for storing based on stock need
-        let numOfProducts = await Supply.aggregate( 
-            //recreate supply element by compressing elements with same name. Now the fields are arrays
-            [   
-                {$match: {$or:dbQueries,deleted:false}},
-                {$group: {
-                    _id:"$name",
-                    class:{$last:"$class"},
-                    suppID:{$last:"$_id"},
-                    principle:{$last:"$principle"},
-                    name: { $last: "$name" },
-                    expiration:{ $push: "$expiration" },
-                    sell_price: { $last: "$sell_price" },
-                    buy_price: { $last: "$buy_price" },
-                    stock:{ $push: "$stock" },                
-                    optimum:{$avg: "$optimum"},
-                    outside:{$last: "$outside"},
-                    images:{$last:"$images"} }},
-                {$addFields:{totalStock : { $sum: "$stock" }}},
-                //porportion of total stock and optimum
-                {$addFields:{proportion :  { $divide: [ "$totalStock", "$optimum" ] }}},
-                {$sort: { proportion: 1 } },
-                 ]
-        ).collation({locale:"en", strength: 1});
-        numOfProducts = numOfProducts.length;
-        let supplies = await Supply.aggregate( 
-            //recreate supply element by compressing elements with same name. Now the fields are arrays
-            [   
-                {$match: {$or:dbQueries,deleted:false}},
-                {$group: {
-                    _id:"$name",
-                    class:{$last:"$class"},
-                    suppID:{$last:"$_id"},
-                    principle:{$last:"$principle"},
-                    name: { $last: "$name" },
-                    expiration:{ $push: "$expiration" },
-                    sell_price: { $last: "$sell_price" },
-                    buy_price: { $last: "$buy_price" },
-                    stock:{ $push: "$stock" },                
-                    optimum:{$avg: "$optimum"},
-                    outside:{$last: "$outside"},
-                    images:{$last:"$images"} }},
-                {$addFields:{totalStock : { $sum: "$stock" }}},
-                //porportion of total stock and optimum
-                {$addFields:{proportion :  { $divide: [ "$totalStock", "$optimum" ] }}},
-                {$sort: { proportion: 1 } },
-                {$limit: resPerPage+(resPerPage * page) - resPerPage },
-                {$skip: (resPerPage * page) - resPerPage  }
-                 ]
-        ).collation({locale:"en", strength: 1});
-        //return supplies and the sorted argument for reincluding it
-        return res.json({"supplies":supplies,"search":req.query.search,"page":page,"sorted":sorted,"pages": Math.ceil(numOfProducts / resPerPage),"numOfResults": numOfProducts});
-    }else{
+    
         console.log('not stock!')
         //other cases for the select element (other sorting options)
         let supplies = [];
         const numOfProducts = await Supply.countDocuments({ $or: dbQueries, deleted: false });
-        if(sorted == "name" ||sorted == "name"){
-        //sort in alphabetical order
-         supplies = await Supply.find({ $or: dbQueries, deleted: false })
-        .sort(sorted === "name" ? { name: 1 } : {})
+        if(sorted == "stock"){
+            supplies = await Supply.find({ $or: dbQueries, deleted: false })
+            .sort(sorted === "stock" ? { existence: -1 } : {})
+            .skip(resPerPage * (page - 1))
+            .limit(resPerPage);
+        }
+        if(sorted == "stock"){
+            supplies = await Supply.find({ $or: dbQueries, deleted: false })
+        .sort(sorted === "stock" ? { stock: 1 } : {})
         .skip(resPerPage * (page - 1))
         .limit(resPerPage);
-            // supplies = supplies.sort((a,b)=>a.name.localeCompare(b.name,"es",{sensitivity:'base'})).slice(((resPerPage * page) - resPerPage),((resPerPage * page) - resPerPage)+resPerPage);
         };
         if(sorted == "class"){
             supplies = await Supply.find({ $or: dbQueries, deleted: false })
@@ -401,7 +352,6 @@ module.exports.searchAllSupplies = async (req, res) => {
         }
         //return supplies and the sorted argument for reincluding it
         return res.json({"supplies":supplies,"search":req.query.search,"page":page,"sorted":sorted,"pages": Math.ceil(numOfProducts / resPerPage),"numOfResults": numOfProducts});
-    };
 }
 
 
