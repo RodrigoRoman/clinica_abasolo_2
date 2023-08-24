@@ -321,18 +321,20 @@ module.exports.searchAllSupplies = async (req, res) => {
         //other cases for the select element (other sorting options)
         let supplies = [];
         const numOfProducts = await Supply.countDocuments({ $or: dbQueries, deleted: false });
+        if(sorted == "name" ||sorted == "name"){
+            //sort in alphabetical order
+             supplies = await Supply.find({ $or: dbQueries, deleted: false })
+            .sort(sorted === "name" ? { name: 1 } : {})
+            .skip(resPerPage * (page - 1))
+            .limit(resPerPage);
+                // supplies = supplies.sort((a,b)=>a.name.localeCompare(b.name,"es",{sensitivity:'base'})).slice(((resPerPage * page) - resPerPage),((resPerPage * page) - resPerPage)+resPerPage);
+            };
         if(sorted == "stock"){
             supplies = await Supply.find({ $or: dbQueries, deleted: false })
             .sort(sorted === "stock" ? { existence: -1 } : {})
             .skip(resPerPage * (page - 1))
             .limit(resPerPage);
         }
-        if(sorted == "stock"){
-            supplies = await Supply.find({ $or: dbQueries, deleted: false })
-        .sort(sorted === "stock" ? { stock: 1 } : {})
-        .skip(resPerPage * (page - 1))
-        .limit(resPerPage);
-        };
         if(sorted == "class"){
             supplies = await Supply.find({ $or: dbQueries, deleted: false })
         .sort(sorted === "class" ? { class: 1 } : {})
