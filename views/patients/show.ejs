@@ -262,7 +262,7 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
     </table>
     <%}
     %>
-    <%if(currentUser.role == "directAdmin" || currentUser.role == "dinamicAdmin" || (currentUser.role == "caja")||(currentUser.role == "medico" ){%>
+    <%if(currentUser.role == "directAdmin" || currentUser.role == "dinamicAdmin" || (currentUser.role == "caja")||(currentUser.role == "medico" )){%>
       <div class="container ">
         <%total = +(total).toFixed(2)%>
         
