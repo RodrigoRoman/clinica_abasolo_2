@@ -71,12 +71,15 @@
                                 <p class="text-center">Servicios medicos</p>
                             </a>
                         </div>
+                        <% if(currentUser.role == 'directAdmin'){%>
+
                         <div class="col-sm-4">
                             <a href="/exits/box" class="grid-item">
                                 <lottie-player src="/lotties/money_box.json" background="transparent" speed="1" style="width: 250px; height: 100px;" loop autoplay></lottie-player>
                                 <p class="text-center">Apartados de dinero</p>
                             </a>
                         </div>
+                        <%}%>
                         <!-- /generateQ -->
                     <%}%>
                 </div>
