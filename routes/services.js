@@ -44,7 +44,7 @@ router.route('/supply/outOfStock')
     .put(catchAsync(services.deleteOutOfStock))
 
 router.route('/generateQr')
-    .get(isDinamicDirectAdmin,catchAsync(services.renderGenerateQr))
+    .get(isDirectAdminOrCaja,catchAsync(services.renderGenerateQr))
 
 
 //SEARCH SERVICES
@@ -81,8 +81,7 @@ router.get('/:id/edit',isLoggedIn,isDirectAdminOrCaja, catchAsync(services.rende
 
 router.route('/generate-pdf-exists')
     .post(isLoggedIn, isDinamicDirectAdmin,catchAsync(services.generate_pdf_exists))
-
-    router.route('/generateQr')
-    .get(isDirectAdminOrCaja,catchAsync(services.renderGenerateQr))
+// router.route('/generateQr')
+//     .get(isDirectAdminOrCaja,catchAsync(services.renderGenerateQr))
 
 module.exports = router;
