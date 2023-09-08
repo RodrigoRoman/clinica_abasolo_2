@@ -83,6 +83,6 @@ router.route('/generate-pdf-exists')
     .post(isLoggedIn, isDinamicDirectAdmin,catchAsync(services.generate_pdf_exists))
 
     router.route('/generateQr')
-    .get(isDinamicDirectAdmin,catchAsync(services.renderGenerateQr))
+    .get(isDirectAdminOrCaja,catchAsync(services.renderGenerateQr))
 
 module.exports = router;
