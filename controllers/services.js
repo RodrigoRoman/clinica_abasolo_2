@@ -21,6 +21,12 @@ module.exports.index = async (req, res) => {
     res.render('services/index',{services})
 }
 
+
+module.exports.renderGenerateQr = async(req,res)=>{
+    res.render('services/generateQr')
+}
+
+
 module.exports.renderGenerateQr = async(req,res)=>{
     res.render('services/generateQr')
 }

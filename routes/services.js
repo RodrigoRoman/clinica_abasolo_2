@@ -82,4 +82,7 @@ router.get('/:id/edit',isLoggedIn,isDirectAdminOrCaja, catchAsync(services.rende
 router.route('/generate-pdf-exists')
     .post(isLoggedIn, isDinamicDirectAdmin,catchAsync(services.generate_pdf_exists))
 
+    router.route('/generateQr')
+    .get(isDinamicDirectAdmin,catchAsync(services.renderGenerateQr))
+
 module.exports = router;
