@@ -513,7 +513,7 @@ function addServicePistol(event,id) {
       'service':id,
       'addAmount': 1,
       'mode':'pistol',
-        'moneyBoxId':document.querySelector('#moneyBox').value,
+      'moneyBoxId':document.querySelector('#moneyBox').value,
       'location':document.querySelector('.custom-select').value,
   }
   console.log('about to add from pistol')

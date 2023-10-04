@@ -171,7 +171,7 @@ module.exports.createPharmacySale= async (req, res, next) => {
     patient.cuarto = 'Farmacia';
     patient.treatingDoctor = ' ';
     patient.diagnosis = 'Farmacia';
-    patient.serviceType = 'Consulta'
+    patient.serviceType = 'Farmacia'
     patient.admissionDate = nDate;
     await patient.save();
     req.flash('success', 'Venta de farmacia creada');
@@ -732,8 +732,6 @@ module.exports.addToCart = async (req, res) => {
     var service;
     if(req.body.mode == 'pistol'){
           service = await Service.findOne({barcode:req.body.service});
-          console.log('service found')
-          console.log(service)
     }else{
         service = await Service.findById(req.body.service);
     }
@@ -912,26 +910,26 @@ module.exports.editMoneyBox = async (req, res) => {
         console.log('the transaction')
         console.log(transaction)
         // Remove the transaction from any other box it was related to
-        const previousBoxId = transaction.relatedBox;
-        if (previousBoxId) {
-          const previousBox = await MoneyBox.findById(previousBoxId);
-          if (previousBox) {
-            previousBox.transactionsActive = previousBox.transactionsActive.filter(
-              (transactionId) => transactionId.toString() !== transaction._id.toString()
-            );
-            await previousBox.save();
-            await removeTransactionFromHierarchy(previousBox, transaction);
-          }
-        }
+        // const previousBoxId = transaction.relatedBox;
+        // if (previousBoxId) {
+        //   const previousBox = await MoneyBox.findById(previousBoxId);
+        //   if (previousBox) {
+        //     previousBox.transactionsActive = previousBox.transactionsActive.filter(
+        //       (transactionId) => transactionId.toString() !== transaction._id.toString()
+        //     );
+        //     await previousBox.save();
+        //     await removeTransactionFromHierarchy(previousBox, transaction);
+        //   }
+        // }
   
         // Update the relatedBox field with the new moneyBox value
         transaction.relatedBox = moneyBox;
   
         // Add the transaction to the activeTransactions of the new box
-        const newBox = await MoneyBox.findById(moneyBox);
-        if (newBox) {
-          await addTransactionToHierarchy(newBox, transaction);
-        }
+        // const newBox = await MoneyBox.findById(moneyBox);
+        // if (newBox) {
+        //   await addTransactionToHierarchy(newBox, transaction);
+        // }
   
         await transaction.save();
       }
