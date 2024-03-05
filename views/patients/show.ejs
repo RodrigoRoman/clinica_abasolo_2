@@ -151,7 +151,9 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
             
             <td class = "item-price"><%=makeDMYHour(new Date(item.consumtionDate))%></td>
             <%
-            let subtotal = +(item.amount*(price-(price*(item.discount*0.01)))).toFixed(2);%>
+            let subtotal = +(item.amount*(price-(price*(item.discount*0.01)))).toFixed(2);
+            total+=subtotal
+            %>
             <td ><small class = "text-muted"><%=item.author%></small></td>
             <%if(!flag && !patient.payed){%>
 
@@ -167,7 +169,7 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
                 <button class="btn btn-sm btn-discount-inactive btn-secondary discount-button"><i class="fas fa-cog submitDiscount"></i></button>
               </td>              
               <td>$ <%=numberCommas(subtotal)%> 
-                <%total+=subtotal%>
+                
                 <span class = "float-right buttons">
                   <button type="button"  class="delete-item btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
                   <button type="button"  class="edit-item btn btn-sm btn-outline-info"><i class="fas fa-edit"></i></button>
@@ -193,12 +195,17 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
             <%}else{%>
               <td></td>
             <%}
-            total+=subtotal
+
 
           }
+
+
             }%>
           </tr>
-        <%}%>
+
+        <%}
+        
+        %>
       </tbody>
     </table>
     <br>
