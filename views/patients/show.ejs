@@ -16,9 +16,12 @@
   <p class="orange-text">Pausado por reabastecimiento</p>
  </div>
  <%}%>
+
   <div class = ' d-flex justify-content-center align-items-center mb-4 mt-4'>
     <div class="pop-up-container "><h5 class="display-3 font-weight-bold text-center" style="font-family: Helvetica, Arial, sans-serif; color: #4A4A4A; text-transform: uppercase; letter-spacing: 2px;  font-size: 40px"><%=patient.name%></h5> </div>
   </div>
+  <%if(!flag && !patient.payed){%>
+
   <div class="d-flex justify-content-center align-items-center mb-4 mt-4">
     <select class="btn btn-outline-secondary btn-lg custom-select ml-2" id='department' name="department" style="max-width: 300px">
       <option <%= currentUser.stockLocation == 'Vale' ? 'selected' : '' %> id="vale" value="Vale">Vale</option>
@@ -51,6 +54,8 @@
         </tbody>
     </table>
   </div>
+  <%}%>
+
 </div>
 <%
 function numberCommas(x) {
@@ -115,8 +120,11 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
           </th>
           <th><small class = "text-muted">Agregado por</small>
           </th>
+          <%if(!flag && !patient.payed){%>
           <%if(currentUser.role == "directAdmin" || currentUser.role == "dinamicAdmin"||currentUser.role == "caja"){%>
+
           <th><small class = "text-muted">Descuento</small>
+
           </th>
             <th>Subtotal
             </th>
@@ -126,7 +134,7 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
           <%}else{%>
             <th>Corregir
             </th>
-          <%}%>
+          <%}}%>
         </tr>
       </thead>
 
@@ -145,6 +153,8 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
             <%
             let subtotal = +(item.amount*(price-(price*(item.discount*0.01)))).toFixed(2);%>
             <td ><small class = "text-muted"><%=item.author%></small></td>
+            <%if(!flag && !patient.payed){%>
+
             <%if(currentUser.role == "directAdmin" || currentUser.role == "dinamicAdmin"||currentUser.role == "caja"){%>
 
               <td>
@@ -184,6 +194,8 @@ let timeElements = patientCar.filter(el=>(timeUnits.includes(el.unit)));
               <td></td>
             <%}
             total+=subtotal
+
+          }
             }%>
           </tr>
         <%}%>

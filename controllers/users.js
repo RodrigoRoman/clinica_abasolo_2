@@ -13,7 +13,7 @@ module.exports.register = async (req, res, next) => {
     try {
         const { email, username, password,keyword,moneyBox} = req.body;
         let user;
-        if(keyword == "administracionClinicaSRMina7"){
+        if(keyword == "administracionAbasolo"){
             user = new User({ email, username,moneyBox, role:"directAdmin",color:"#4a81e8"});
         }
         if(keyword == "administracion1" || keyword == "cajaAbasolo"){
