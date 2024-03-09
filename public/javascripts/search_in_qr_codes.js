@@ -119,7 +119,7 @@ function populateTable(event) {
 
          tableContent += '<td><h1 alt ="'+this._id+'">$' + numberCommas(this.price) + '</h1></td>';
        }else{
-         tableContent += '<td id = "supplyName"><h2>' + this.name + '</h2></td>';
+         tableContent += '<td id = "supplyName"><a class = "text-dark" href="/services/'+this._id+'/edit"><h2>' + this.name + '</h2></a></td>';
          tableContent += '<td><small alt ="'+this._id+'" class = "cls">' + this.class + '</small></td>';
          tableContent += '<td><h1>$' + numberCommas(this.sell_price) + '</h1></td>';
        }
@@ -152,7 +152,7 @@ function populateTableModal(event) {
         tableContent += '<td id = "supplyName"></td>';
         tableContent += '<td><h1 alt ="'+this._id+'" >$' + numberCommas(this.price) + '</h1></td>';
       }else{
-        tableContent += '<td id = "supplyName"><h2>' + this.name + '</h2></td>';
+        tableContent += '<td id = "supplyName"><a class = "text-dark" href="/services/'+this._id+'/edit"><h2>' + this.name + '</h2></a></td>';
         tableContent += '<td><small alt ="'+this._id+'"  class = "cls">' + this.class + '</small></td>';
         tableContent += '<td><h1 alt ="'+this._id+'" >$' + numberCommas(this.sell_price) + '</h1></td>';
       }
