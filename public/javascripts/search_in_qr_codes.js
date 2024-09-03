@@ -91,7 +91,7 @@ $("tbody").on('click',".addToCart", function () {
     quantity: parseInt($row.find('input.quantity').val()),
     };
 
-    // Add the supply to the selectedSupplies array
+    // Add the supply to the selectedSupplies arra
     selectedSupplies.push(supply);
     updateSelectedSuppliesTable();
     generateQRCodes();
