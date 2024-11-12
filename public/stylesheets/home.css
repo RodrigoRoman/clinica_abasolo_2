@@ -1,6 +1,6 @@
 body {
     height: 100vh;
-    background-image: linear-gradient(rgba(35, 75, 63, 0.85), rgba(30, 86, 189)),
+    background-image: linear-gradient(rgba(35, 75, 63, 0.85), rgb(30, 189, 83)),
     url("");
     background-size: cover;
     background-position: center;
