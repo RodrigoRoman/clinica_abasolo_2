@@ -29,11 +29,6 @@ const MongoDBStore = require("connect-mongo");
 
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/clinicaSanR';
 
-// const dbUrl = 'mongodb://localhost:27017/clinicaSanR';
-document.documentElement.style.setProperty(
-    '--bg-color',
-    process.env.COLOR_BG || '#1E56BD' // Fallback hex color if COLOR_BG is not set
-  );
 
 
 mongoose.connect(dbUrl, {
