@@ -513,30 +513,24 @@ console.log(secondarySort)
 
 
     function generatePDF(tableId) {
-      console.log('generate llamado');
-      console.log(tableId)
-      console.log(document.getElementById(tableId).innerHTML);
+      const BASE_URL = window.BASE_URL || 'http://localhost:3000'; // Default fallback
   
-      fetch('https://clinicaabasolo2-production.up.railway.app/exits/generate-pdf-stock', {
+      fetch(`${BASE_URL}/exits/generate-pdf-stock`, {
           method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              content: document.getElementById(tableId).innerHTML, // Get the content of the specific table
-          }),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: document.getElementById(tableId).innerHTML }),
       })
       .then(response => response.blob())
       .then(blob => {
-          // Create a blob URL and download the file
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = `reporte_${nDate.toISOString()}.pdf`;
+          a.download = `reporte_${new Date().toISOString()}.pdf`;
           a.click();
       })
       .catch(error => console.error('Error:', error));
   }
+  
 
 
 

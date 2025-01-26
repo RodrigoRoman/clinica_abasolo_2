@@ -738,7 +738,11 @@ $(document).ready(function() {
 $('#genPDf').click(generatePDF)
 
 function generatePDF() {
-  fetch('https://clinicaabasolo2-production.up.railway.app/exits/generate-pdf-account', {
+  
+
+  const BASE_URL = window.BASE_URL || 'http://localhost:3000'; // Default fallback
+  
+      fetch(`${BASE_URL}/exits/generate-pdf-account`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

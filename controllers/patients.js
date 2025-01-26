@@ -587,12 +587,10 @@ module.exports.accountToPDF = async (req,res) =>{
   });
 
   const page = await browser.newPage();
-  await page.goto(
-    `https://clinicaabasolo2-production.up.railway.app/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}&role=${role}`,
-    { waitUntil: 'networkidle0' }
-    // `http://localhost:3000/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,
-    // { waitUntil: 'networkidle0' }
-  );
+  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+  const url = `${baseUrl}/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}&role=${role}`;
+
+  await page.goto(url, { waitUntil: 'networkidle0' });
 
   const dom = await page.$eval('.toPDF', (element) => {
     return element.innerHTML;
@@ -633,11 +631,16 @@ module.exports.dischAccountPDF = async (req,res) =>{
         headless: 'new' // Use the new Headless mode
       });    
       const page = await browser.newPage();           // open new tab
+      const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+      const url = `${baseUrl}/patients/${req.params.id}/showDischarged`;
+  
+      await page.goto(url, { waitUntil: 'networkidle0' });
+  
     
     // await page.goto(`https://pure-brushlands-42473.herokuapp.com/patients/${req.params.id}/showAccount?begin=${begin}&end=${end}`,{
     //     waitUntil: 'networkidle0'}); 
-    await page.goto(`https://clinicaabasolo2-production.up.railway.app/patients/${req.params.id}/showDischarged`,{
-        waitUntil: 'networkidle0'});          // go to site
+    // await page.goto(`https://clinicaabasolo2-production.up.railway.app/patients/${req.params.id}/showDischarged`,{
+    //     waitUntil: 'networkidle0'});          // go to site
     // await page.goto(
     //     `http://localhost:3000/patients/${req.params.id}/showDischarged`,{
     //       waitUntil: 'networkidle0'});

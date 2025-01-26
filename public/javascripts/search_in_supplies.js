@@ -500,7 +500,9 @@ function generatePDF() {
   // Convert the content into a table
   var tableContent = convertToTable(content);
 
-  fetch('https://clinicaabasolo2-production.up.railway.app/services/generate-pdf-exists', {
+  const BASE_URL = window.BASE_URL || 'http://localhost:3000'; // Default fallback
+  
+      fetch(`${BASE_URL}/services/generate-pdf-exists`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
